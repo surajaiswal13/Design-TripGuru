@@ -1,0 +1,300 @@
+-------------------------- PROBLEM STATEMENT ---------------------------
+
+## Problem 2: The Coupon Promotions Problem
+
+There are multiple countries that we are operating our tourism business in. There are multiple cities in each country, and multiple tours in each city.
+
+We’re also selling our tours on b2b platforms (like airbnb, getyourguide etc.) and our own b2c platform. We’re running a lot of marketing campaigns and provide discount coupons depending on many aspects like location, tour, timing, whether the user is a returning customer etc.
+
+We wanna create a coupons/discount system that is able to accommodate the following requirements/cases:
+
+1. A coupon (AIRBALI) can be required to manually applicable if the booking comes from a specific city and from a specific b2b platform. (e.g., booking comes from airbnb in bali) @
+2. A coupon (AUTOTHAI) should be automatically applicable for all the cities and all tours in a specific country. (e.g., bookings coming in Thailand from any platform for any tours)
+3. A coupon can be manually applied for all tours in Bali expect one trekking tour. 
+4. A coupon can be automatically applied for all the bookings coming from our b2c platform.
+5. A coupon can be automatically applied for all the bookings coming from all the platforms expect our b2c platform.
+
+Platforms examples include: TripGuru(b2c), Airbnb(b2b), GetYourGuide(b2b), Klook(b2b) etc.
+
+Create a system including database schema that is able to provide the functionality satisfying the business requirements.
+
+*********************************************************************
+
+ROUGH WORK
+
+b2b b2c
+discount Coupons
+
+location, time, tour, returning customer
+
+Automatically, Manullay
+mulitple cities, Multiple Tours
+
+**********************************************************************
+
+Extra Requirement: 
+
+COUNTRY
+EXCEPT
+ALL b2c
+EXCEPT b2c
+
+*********************** DATABASE SCHEMA ****************************
+
+User
+```
+It will store User Entries
+```
+
+name:
+bio:
+last_login:
+profile_image:
+last_trip: 
+
+```
+last_trip: it is used for checking for returning customer
+```
+
+TOUR
+```
+It will Stor Tour Entries
+```
+
+id
+name:
+city_id: 
+country_id:
+continent_id:
+
+```
+In Tour Table
+
+city_id: It will have of object in CITY Table
+country_id: It will have of object in COUNTRY Table
+continent_id: It will have of object in CONTINENT Table
+
+```
+
+Coupons
+```
+It will Stor Coupon Entries
+```
+
+id:
+Coupon_name:
+discount:
+coupon_nature:
+
+```
+"coupon_nature" will have TWO Options Automatic and Manual, 
+    it describes that Automatic ones will be automatically applied on the backend
+    and Manual one will be needed some interaction from Client
+```
+
+COUPON_TOUR
+```
+It will Stor COUPON Entries
+```
+
+id: 1
+coupon_id:
+tour_id: 
+Accept:
+
+```
+coupon_id: it will have of object in COUPON Table
+tour_id: it will have of object in TOUR Table
+Accept: It will have two options YES or NO so if Yes then it is an Include if No then it is an Exclude entry
+```
+
+COUNTRY:
+```
+It will Stor COUPON Entries
+```
+
+id:
+name:
+long:
+lat:
+
+COUPON_COUNTRY
+```
+It will Store Countries associated with COUPON Entries
+```
+
+id:
+coupon_id:
+country_id:
+Accept:
+
+```
+coupon_id: it will have of object in COUPON Table
+country_id: it will have of object in COUNTRY Table
+Accept: It will have two options YES or NO so if Yes then it is an Include if No then it is an Exclude entry
+```
+
+CITY
+```
+It will Store CITY Entries
+```
+
+id:
+name:
+long:
+lat:
+
+COUPON_CITY
+```
+It will Store City associated with COUPON Entries
+```
+
+id:
+coupon_id:
+city_id:
+Accept:
+
+```
+coupon_id: it will have of object in COUPON Table
+city_id: it will have of object in CITY Table
+Accept: It will have two options YES or NO so if Yes then it is an Include if No then it is an Exclude entry
+```
+
+PLATFORM
+```
+It will Store PLATFORM Entries
+```
+
+id:
+name:
+domain:
+
+BUSINESS_PLATFORM
+```
+It will Store Platform associated with COUPON Entries
+```
+
+id:
+coupon_id:
+platform_id:
+Accept:
+
+```
+coupon_id: it will have of object in COUPON Table
+platform_id: it will have of object in PLATFORM Table
+Accept: It will have two options YES or NO so if Yes then it is an Include if No then it is an Exclude entry
+```
+
+Bookings
+```
+It will Store Booking Entries
+```
+
+id:
+tour_id:
+time:
+coupon_id: 
+user_id: 
+payment_method:
+
+CONTINENT
+```
+It will Store Booking Entries
+```
+
+id:
+name:
+lat:
+long:
+
+-------------------------------------TESTCASES--------------------------------
+
+EXAMPLES:
+Example 1
+city: Bali
+tour: T1, T2
+
+
+Example 1:
+
+SOLUTION
+
+Coupons
+
+id: 2
+Coupon_name: AIRT
+discount: 5 %
+coupon_nature: Manully
+
+COUPON_TOUR
+
+id: 1
+Coupon_id: 2 (FOreign_key)
+TOur_name: T1
+
+id: 2
+Coupon_id: 2 (FOreign_key)
+TOur_name: T2
+
+COUPON_CITY
+
+id: 2
+coupon_id: 2
+City_name: 6
+
+CITY
+
+id: 6
+Name: BALI
+
+---------------------------
+Example 2:
+
+automatic
+platforms : AIRBNB
+city: Bali
+
+SOLUTION:
+
+Coupons
+
+id: 3
+Coupon_name: BALIPLAT
+discount: 15 %
+coupon_nature: AUTOMATIC
+
+
+COUPON_CITY
+
+id: 3
+coupon_id: 3
+City_name: 6
+
+BUSINESS_PLATFORM
+
+id:
+coupon_id: 3
+Platform_name: AIRBNB
+
+-------------------------------
+Example 3:
+
+allPlatforms except TripGuru
+
+Coupons
+
+id: 999
+Coupon_name: ALLPLAT
+discount: 20 %
+coupon_nature: AUTOMATIC
+
+BUSINESS_PLATFORM
+
+id:
+coupon_id:
+Platform_name:
+accept: YES, NO 
+
+
+
+-------------------------------
